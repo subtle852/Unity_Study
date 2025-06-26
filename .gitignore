@@ -84,6 +84,7 @@ desktop.ini
 
 # Local settings for Visual Studio Code
 .vscode/
+.vs/
 
 # Local settings for Rider
 .idea/
