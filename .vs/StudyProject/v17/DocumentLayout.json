@@ -3,11 +3,15 @@
   "WorkspaceRootPath": "C:\\Important\\PROJECT\\PORTFOLIO\\05_UNITY\\StudyProject\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{D89A11B2-2B3F-DBDB-B60B-67B4E4FDFC28}|Assembly-CSharp.csproj|c:\\important\\project\\portfolio\\05_unity\\studyproject\\assets\\unity-chan!\\unity-chan! model\\scripts\\idlechanger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D89A11B2-2B3F-DBDB-B60B-67B4E4FDFC28}|Assembly-CSharp.csproj|solutionrelative:assets\\unity-chan!\\unity-chan! model\\scripts\\idlechanger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{D89A11B2-2B3F-DBDB-B60B-67B4E4FDFC28}|Assembly-CSharp.csproj|c:\\important\\project\\portfolio\\05_unity\\studyproject\\assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D89A11B2-2B3F-DBDB-B60B-67B4E4FDFC28}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D89A11B2-2B3F-DBDB-B60B-67B4E4FDFC28}|Assembly-CSharp.csproj|c:\\important\\project\\portfolio\\05_unity\\studyproject\\assets\\scripts\\managers\\managers.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{D89A11B2-2B3F-DBDB-B60B-67B4E4FDFC28}|Assembly-CSharp.csproj|C:\\Important\\PROJECT\\PORTFOLIO\\05_UNITY\\StudyProject\\assets\\scripts\\managers\\managers.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D89A11B2-2B3F-DBDB-B60B-67B4E4FDFC28}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\managers\\managers.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -27,6 +31,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "IdleChanger.cs",
+              "DocumentMoniker": "C:\\Important\\PROJECT\\PORTFOLIO\\05_UNITY\\StudyProject\\Assets\\unity-chan!\\Unity-chan! Model\\Scripts\\IdleChanger.cs",
+              "RelativeDocumentMoniker": "Assets\\unity-chan!\\Unity-chan! Model\\Scripts\\IdleChanger.cs",
+              "ToolTip": "C:\\Important\\PROJECT\\PORTFOLIO\\05_UNITY\\StudyProject\\Assets\\unity-chan!\\Unity-chan! Model\\Scripts\\IdleChanger.cs",
+              "RelativeToolTip": "Assets\\unity-chan!\\Unity-chan! Model\\Scripts\\IdleChanger.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAADgvzoAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-26T06:35:56.995Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "Player.cs",
               "DocumentMoniker": "C:\\Important\\PROJECT\\PORTFOLIO\\05_UNITY\\StudyProject\\Assets\\Scripts\\Player.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Player.cs",
@@ -39,7 +56,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Managers.cs",
               "DocumentMoniker": "C:\\Important\\PROJECT\\PORTFOLIO\\05_UNITY\\StudyProject\\Assets\\Scripts\\Managers\\Managers.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Managers\\Managers.cs",
@@ -47,12 +64,11 @@
               "RelativeToolTip": "Assets\\Scripts\\Managers\\Managers.cs",
               "ViewState": "AgIAAAwAAAAAAAAAAAAQwBoAAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-26T05:24:08.428Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T05:24:08.428Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Test.cs",
               "DocumentMoniker": "C:\\Important\\PROJECT\\PORTFOLIO\\05_UNITY\\StudyProject\\Assets\\Scripts\\Test.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Test.cs",

@@ -3,7 +3,7 @@
 
 # Library folder: Contains asset import metadata, cached files, and platform-specific data.
 # This is usually the largest folder and should almost always be ignored.
-# 유니티 프로젝트를 열면 자동으로 다시 생성됩니다.
+# Unity 프로젝트를 열면 자동으로 다시 생성됩니다.
 Library/
 
 # Temp folder: Temporary files created by Unity during compilation and asset processing.
@@ -13,7 +13,7 @@ Temp/
 Obj/
 
 # Builds folder: Compiled game builds for various platforms.
-# 각자 바로 실행할 수 있도록 '빌드 결과물'은 포함하지 않습니다.
+# 면접관이 바로 실행할 수 있도록 '빌드 결과물'은 포함하지 않습니다.
 Builds/
 *.apk
 *.aab
@@ -34,7 +34,7 @@ Builds/
 
 # Auto-generated Visual Studio/Rider solution and project files.
 # 이 파일들은 각 개발 환경에 따라 다르게 생성되므로 제외하는 것이 좋습니다.
-# 각자의 IDE에서 프로젝트를 열면 다시 생성됩니다.
+# 면접관의 IDE에서 프로젝트를 열면 다시 생성됩니다.
 *.csproj
 *.unityproj
 *.sln
@@ -54,6 +54,13 @@ Builds/
 *.vshost.exe
 *.vshost.exe.config
 *.webinfo
+
+# Specific temporary files that might be generated in the root or Library
+# .bin 파일은 주로 컴파일된 코드나 캐시 데이터이므로 제외
+# (단, Assets 폴더 안에 직접 생성되는 데이터 파일이라면 포함해야 할 수도 있습니다. 
+# 일반적인 유니티 프로젝트에서는 주로 Library/ 안에 생성됩니다.)
+*.bin
+*.vsidx # Visual Studio Code/IDE 인덱싱 파일
 
 # Unity Debugger and Profiler files
 *.mdb
@@ -92,7 +99,10 @@ Rider/
 # Note: They are NOT listed in this .gitignore, meaning they WILL be included by default.
 
 # Assets folder: Contains all your game assets (scripts, models, textures, scenes, audio, etc.).
-# Assets/  <- 이 라인이 없으면 포함됩니다.
+# Assets/ 안에 있는 모든 .cs, .prefab, .unity 파일들은 당연히 포함됩니다.
+# .meta 파일도 Assets/ 안에 있는 모든 에셋의 메타데이터이므로 포함됩니다.
+# Custom .json files used for game data in Assets/ are also included.
+# Assets/ <- 이 라인이 없으면 포함됩니다.
 
 # ProjectSettings folder: Contains all Unity project-wide settings (physics, rendering, input, etc.).
 # ProjectSettings/ <- 이 라인이 없으면 포함됩니다.
@@ -102,11 +112,12 @@ Rider/
 # Packages/ <- 이 라인이 없으면 포함됩니다.
 
 # All .meta files: Contains asset metadata, GUIDs, and import settings. CRITICAL.
-# *.meta <- 이 라인이 없으면 모든 .meta 파일이 포함됩니다. (위에서 특정 임시 meta는 제외하는 규칙이 있음)
+# *.meta <- 이 라인이 없으면 모든 .meta 파일이 포함됩니다. 
+# (위에서 특정 임시 meta는 제외하는 규칙이 있었지만, 이는 Assets/ 외부에 생성되는 임시 파일에 대한 것입니다.)
 
 # ==================== Optional: Git LFS consideration ====================
 # 만약 프로젝트에 매우 큰 에셋 파일(예: 고해상도 텍스처, 대용량 모델, 긴 오디오 파일)이 많다면,
-# Git Large File Storage (LFS)를 사용하여 Git 저장소 자체의 크기를 관리하는 것을 고려해 보세요.
+# Git Large File Storage (Git LFS)를 사용하여 Git 저장소 자체의 크기를 관리하는 것을 고려해 보세요.
 # 아래 확장자들은 LFS 적용을 고려해 볼 수 있는 파일들입니다. Git LFS를 사용하지 않는다면,
 # 이 파일들은 Git에 직접 저장되어 저장소 크기를 크게 만들 수 있습니다.
 # *.psd
