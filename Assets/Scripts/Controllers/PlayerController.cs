@@ -44,6 +44,8 @@ public class PlayerController : MonoBehaviour
         if(_mouseMoveToDest == true)
         {
             wait_run_ratio = Mathf.Lerp(wait_run_ratio, 1, 10.0f * Time.deltaTime);
+            if (Mathf.Abs(wait_run_ratio - 1.0f) < 0.0001f)
+                wait_run_ratio = 1.0f;
             Animator animator = GetComponent<Animator>();
             animator.SetFloat("wait_run_ratio", wait_run_ratio);
             animator.Play("WAIT_RUN");
@@ -51,6 +53,8 @@ public class PlayerController : MonoBehaviour
         else
         {
             wait_run_ratio = Mathf.Lerp(wait_run_ratio, 0, 10.0f * Time.deltaTime);
+            if (Mathf.Abs(wait_run_ratio - 0.0f) < 0.0001f)
+                wait_run_ratio = 0.0f;
             Animator animator = GetComponent<Animator>();
             animator.SetFloat("wait_run_ratio", wait_run_ratio);
             animator.Play("WAIT_RUN");
