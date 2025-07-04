@@ -12,8 +12,6 @@ public class PlayerController : MonoBehaviour
     //bool _mouseMoveToDest = false; // state로 관리하기에 더이상 불필요
     Vector3 _mouseMoveDestPos;
 
-    float wait_run_ratio = 0;
-
     public enum PlayerState
     {
         Die,
@@ -54,23 +52,15 @@ public class PlayerController : MonoBehaviour
         }
 
         // 애니메이션
-        wait_run_ratio = Mathf.Lerp(wait_run_ratio, 1, 10.0f * Time.deltaTime);
-        if (Mathf.Abs(wait_run_ratio - 1.0f) < 0.0001f)
-            wait_run_ratio = 1.0f;
         Animator animator = GetComponent<Animator>();
-        animator.SetFloat("wait_run_ratio", wait_run_ratio);
-        animator.Play("WAIT_RUN");
+        animator.SetFloat("speed", _positionSpeed);
     }
 
     void UpdateIdle()
     {
         // 애니메이션
-        wait_run_ratio = Mathf.Lerp(wait_run_ratio, 0, 10.0f * Time.deltaTime);
-        if (Mathf.Abs(wait_run_ratio - 0.0f) < 0.0001f)
-            wait_run_ratio = 0.0f;
         Animator animator = GetComponent<Animator>();
-        animator.SetFloat("wait_run_ratio", wait_run_ratio);
-        animator.Play("WAIT_RUN");
+        animator.SetFloat("speed", 0);
     }
 
     void Update()
