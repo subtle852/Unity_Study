@@ -38,6 +38,17 @@ public class PlayerController : MonoBehaviour
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 10 * Time.deltaTime);
             }
         }
+
+        if(_mouseMoveToDest == true)
+        {
+            Animator animator = GetComponent<Animator>();
+            animator.Play("RUN");
+        }
+        else
+        {
+            Animator animator = GetComponent<Animator>();
+            animator.Play("WAIT");
+        }
     }
 
     void OnKeyboard()
@@ -98,8 +109,9 @@ public class PlayerController : MonoBehaviour
 
     void OnMouseClicked(Define.MouseEvent evt)
     {
-        if (evt != Define.MouseEvent.Click)
-            return;
+        // 마우스 누른 상태에서도 움직이도록 수정
+        //if (evt != Define.MouseEvent.Click)
+        //    return;
 
         Debug.Log("OnMouseClicked");
 
