@@ -9,55 +9,83 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float _rotationSpeed = 10.0f;
 
-    bool _mouseMoveToDest = false;
+    //bool _mouseMoveToDest = false; // state로 관리하기에 더이상 불필요
     Vector3 _mouseMoveDestPos;
 
     float wait_run_ratio = 0;
 
+    public enum PlayerState
+    {
+        Die,
+        Moving,
+        Idle,
+    }
+
+    PlayerState _state = PlayerState.Idle;
+
     void Start()
     {
-        Managers.Input.KeyAction -= OnKeyboard;
-        Managers.Input.KeyAction += OnKeyboard;
+        // 마우스 이동만 가능하도록 수정
+        //Managers.Input.KeyAction -= OnKeyboard;
+        //Managers.Input.KeyAction += OnKeyboard;
         Managers.Input.MouseAction -= OnMouseClicked;
         Managers.Input.MouseAction += OnMouseClicked;
     }
 
-    void Update()
+    void UpdateDie()
     {
-        if (_mouseMoveToDest == true)
-        {
-            Vector3 dir = _mouseMoveDestPos - transform.position;
-            dir.y = 0.0f;
-            if(dir.magnitude < 0.0001f)
-            {
-                _mouseMoveToDest = false;
-            }
-            else
-            {
-                float moveDist = Mathf.Clamp(_positionSpeed * Time.deltaTime, 0, dir.magnitude);
 
-                transform.position += dir.normalized * moveDist;
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 10 * Time.deltaTime);
-            }
-        }
+    }
 
-        if(_mouseMoveToDest == true)
+    void UpdateMoving()
+    {
+        Vector3 dir = _mouseMoveDestPos - transform.position;
+        dir.y = 0.0f;
+        if (dir.magnitude < 0.0001f)
         {
-            wait_run_ratio = Mathf.Lerp(wait_run_ratio, 1, 10.0f * Time.deltaTime);
-            if (Mathf.Abs(wait_run_ratio - 1.0f) < 0.0001f)
-                wait_run_ratio = 1.0f;
-            Animator animator = GetComponent<Animator>();
-            animator.SetFloat("wait_run_ratio", wait_run_ratio);
-            animator.Play("WAIT_RUN");
+            _state = PlayerState.Idle;
         }
         else
         {
-            wait_run_ratio = Mathf.Lerp(wait_run_ratio, 0, 10.0f * Time.deltaTime);
-            if (Mathf.Abs(wait_run_ratio - 0.0f) < 0.0001f)
-                wait_run_ratio = 0.0f;
-            Animator animator = GetComponent<Animator>();
-            animator.SetFloat("wait_run_ratio", wait_run_ratio);
-            animator.Play("WAIT_RUN");
+            float moveDist = Mathf.Clamp(_positionSpeed * Time.deltaTime, 0, dir.magnitude);
+
+            transform.position += dir.normalized * moveDist;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 10 * Time.deltaTime);
+        }
+
+        // 애니메이션
+        wait_run_ratio = Mathf.Lerp(wait_run_ratio, 1, 10.0f * Time.deltaTime);
+        if (Mathf.Abs(wait_run_ratio - 1.0f) < 0.0001f)
+            wait_run_ratio = 1.0f;
+        Animator animator = GetComponent<Animator>();
+        animator.SetFloat("wait_run_ratio", wait_run_ratio);
+        animator.Play("WAIT_RUN");
+    }
+
+    void UpdateIdle()
+    {
+        // 애니메이션
+        wait_run_ratio = Mathf.Lerp(wait_run_ratio, 0, 10.0f * Time.deltaTime);
+        if (Mathf.Abs(wait_run_ratio - 0.0f) < 0.0001f)
+            wait_run_ratio = 0.0f;
+        Animator animator = GetComponent<Animator>();
+        animator.SetFloat("wait_run_ratio", wait_run_ratio);
+        animator.Play("WAIT_RUN");
+    }
+
+    void Update()
+    {
+        switch(_state)
+        {
+            case PlayerState.Die:
+                UpdateDie(); break;
+
+            case PlayerState.Moving:
+                UpdateMoving(); break;
+
+            case PlayerState.Idle:
+                UpdateIdle(); break;
+
         }
     }
 
@@ -77,7 +105,7 @@ public class PlayerController : MonoBehaviour
 
 
         // 이동 + 회전
-        _mouseMoveToDest = false;
+        //_mouseMoveToDest = false;
 
         if (Input.GetKey(KeyCode.W))
         {
@@ -123,6 +151,9 @@ public class PlayerController : MonoBehaviour
         //if (evt != Define.MouseEvent.Click)
         //    return;
 
+        if (_state == PlayerState.Die)
+            return;
+
         Debug.Log("OnMouseClicked");
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -132,7 +163,7 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("Wall")))
         {
             _mouseMoveDestPos = hit.point;
-            _mouseMoveToDest = true;
+            _state = PlayerState.Moving;
         }
     }
 }
