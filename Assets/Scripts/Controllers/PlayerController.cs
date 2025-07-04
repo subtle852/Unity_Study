@@ -7,10 +7,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float _positionSpeed = 10.0f;
     [SerializeField]
-    private float _rotationSpeed = 10.0f;
+    float _rotationSpeed = 10.0f;
 
     bool _mouseMoveToDest = false;
     Vector3 _mouseMoveDestPos;
+
+    float wait_run_ratio = 0;
 
     void Start()
     {
@@ -41,13 +43,17 @@ public class PlayerController : MonoBehaviour
 
         if(_mouseMoveToDest == true)
         {
+            wait_run_ratio = Mathf.Lerp(wait_run_ratio, 1, 10.0f * Time.deltaTime);
             Animator animator = GetComponent<Animator>();
-            animator.Play("RUN");
+            animator.SetFloat("wait_run_ratio", wait_run_ratio);
+            animator.Play("WAIT_RUN");
         }
         else
         {
+            wait_run_ratio = Mathf.Lerp(wait_run_ratio, 0, 10.0f * Time.deltaTime);
             Animator animator = GetComponent<Animator>();
-            animator.Play("WAIT");
+            animator.SetFloat("wait_run_ratio", wait_run_ratio);
+            animator.Play("WAIT_RUN");
         }
     }
 
