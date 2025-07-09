@@ -19,12 +19,18 @@ public class UI_Button : MonoBehaviour
         ScoreText,
     }
 
+    enum GameObjects
+    {
+        TestObject,
+    }
+
     private void Start()
     {
         Bind<Button>(typeof(Buttons));
         Bind<Text>(typeof(Texts));
+        Bind<GameObject>(typeof(GameObjects));
 
-        Get<Text>((int)Texts.ScoreText).text = "Bind Test";
+        GetText((int)Texts.ScoreText).text = "Bind Test";
     }
 
     void Bind<T>(Type type) where T : UnityEngine.Object
@@ -35,7 +41,13 @@ public class UI_Button : MonoBehaviour
 
         for (int i = 0; i < names.Length; i++)
         {
-            objects[i] = Util.FindChild<T>(gameObject, names[i], true);
+            if(typeof(T) == typeof(GameObject))
+                objects[i] = Util.FindChild(gameObject, names[i], true);
+            else
+                objects[i] = Util.FindChild<T>(gameObject, names[i], true);
+
+            if (objects[i] == null)
+                Debug.Log($"Failed to bind ({names[i]})");
         }
 
     }
@@ -48,6 +60,10 @@ public class UI_Button : MonoBehaviour
 
         return objects[idx] as T;
     }
+
+    Text GetText(int idx) { return Get<Text>(idx); }
+    Button GetButton(int idx) { return Get<Button>(idx); }
+    Image GetImage(int idx) { return Get<Image>(idx); }
 
     int _score = 0;
 
