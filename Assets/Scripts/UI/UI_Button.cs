@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class UI_Button : UI_Base
 {
@@ -17,6 +19,11 @@ public class UI_Button : UI_Base
         ScoreText,
     }
 
+    enum Images
+    {
+        ItemIcon,
+    }
+
     enum GameObjects
     {
         TestObject,
@@ -24,11 +31,17 @@ public class UI_Button : UI_Base
 
     private void Start()
     {
-        Bind<Button>(typeof(Buttons));
-        Bind<Text>(typeof(Texts));
+        Bind<UnityEngine.UI.Button>(typeof(Buttons));
+        Bind<UnityEngine.UI.Text>(typeof(Texts));
+        Bind<UnityEngine.UI.Image>(typeof(Images));
         Bind<GameObject>(typeof(GameObjects));
 
         GetText((int)Texts.ScoreText).text = "Bind Test";
+
+        GameObject go = GetImage((int)Images.ItemIcon).gameObject;
+        UI_EventHandler evt = go.GetComponent<UI_EventHandler>();
+        evt.onDragHandler += ((PointerEventData data) => { evt.gameObject.transform.position = data.position; });
+
     }
 
     int _score = 0;
