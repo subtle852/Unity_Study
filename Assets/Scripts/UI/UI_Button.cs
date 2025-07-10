@@ -36,22 +36,21 @@ public class UI_Button : UI_Base
         Bind<UnityEngine.UI.Image>(typeof(Images));
         Bind<GameObject>(typeof(GameObjects));
 
-        GetText((int)Texts.ScoreText).text = "Bind Test";
-
         GameObject go = GetImage((int)Images.ItemIcon).gameObject;
-        UI_EventHandler evt = go.GetComponent<UI_EventHandler>();
-        evt.onDragHandler += ((PointerEventData data) => { evt.gameObject.transform.position = data.position; });
+        AddUIEvent(go, (PointerEventData data) => { go.transform.position = data.position; }, Define.UIEvent.Drag);
+
+        GetButton((int)Buttons.PointButton).gameObject.AddUIEvent(OnButtonClicked);
 
     }
 
     int _score = 0;
 
-    public void OnButtonClicked()
+    public void OnButtonClicked(PointerEventData data)
     {
         Debug.Log($"Button Clicked");
 
-        //_score++;
-        //_text.text = $"Score : {_score}";
+        _score++;
+        GetText((int)Texts.ScoreText).text = $"점수 : {_score}";
     }
 
 }

@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Define
 {
+    public enum UIEvent
+    {
+        Click,
+        BeginDrag,
+        Drag,
+    }
     public enum MouseEvent
     {
         Press,
