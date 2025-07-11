@@ -31,6 +31,13 @@ public class UI_Button : UI_Popup
 
     private void Start()
     {
+        Init();
+    }
+
+    public override void Init()
+    {
+        base.Init();
+
         Bind<UnityEngine.UI.Button>(typeof(Buttons));
         Bind<UnityEngine.UI.Text>(typeof(Texts));
         Bind<UnityEngine.UI.Image>(typeof(Images));
@@ -40,7 +47,6 @@ public class UI_Button : UI_Popup
         AddUIEvent(go, (PointerEventData data) => { go.transform.position = data.position; }, Define.UIEvent.Drag);
 
         GetButton((int)Buttons.PointButton).gameObject.AddUIEvent(OnButtonClicked);
-
     }
 
     int _score = 0;
