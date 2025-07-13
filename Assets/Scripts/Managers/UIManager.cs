@@ -95,4 +95,17 @@ public class UIManager
         if (_popupStack.Count > 0)
             ClosePopupUI();
     }
+
+    public T MakeSubItem<T>(Transform parent = null, string name = null) where T : UI_Base
+    {
+        if (string.IsNullOrEmpty(name))
+            name = typeof(T).Name;
+
+        GameObject go = Managers.Resource.Instantiate($"UI/SubItem/{name}");
+
+        if (parent != null)
+            go.transform.SetParent(parent.transform);
+
+        return Util.GetOrAddComponent<T>(go);
+    }
 }
