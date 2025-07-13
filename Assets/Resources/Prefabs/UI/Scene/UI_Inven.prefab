@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 804152165819488519}
   - component: {fileID: 2599381466396114026}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: GridPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
