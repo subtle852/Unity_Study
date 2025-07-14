@@ -12,7 +12,8 @@ public class InputManager
 
     public void OnUpdate()
     {
-        if (EventSystem.current.IsPointerOverGameObject())
+        if(GameObject.FindObjectOfType(typeof(EventSystem)) != null
+            && EventSystem.current.IsPointerOverGameObject())
             return;
 
         if (KeyAction != null && Input.anyKey)
