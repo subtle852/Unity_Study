@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LoginScene : BaseScene
 {
@@ -11,18 +12,16 @@ public class LoginScene : BaseScene
         SceneType = Define.Scene.Login;
 
     }
-    public override void Clear()
-    {
-        
-    }
-
-    void Start()
-    {
-        
-    }
 
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Managers.Scene.LoadScene(Define.Scene.Game);
+        }
+    }
+    public override void Clear()
+    {
+        Debug.Log("LoginScene.Clear is called");
     }
 }

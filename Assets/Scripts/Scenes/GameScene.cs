@@ -12,12 +12,12 @@ public class GameScene : BaseScene
 
         Managers.UI.ShowSceneUI<UI_Inven>();
     }
-    public override void Clear()
+
+    void Update()
     {
         
     }
-
-    void Update()
+    public override void Clear()
     {
         
     }
