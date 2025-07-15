@@ -21,6 +21,10 @@ public class Managers : MonoBehaviour
 
     public static SceneManagerEx Scene { get { return Instance._scene; } }
 
+    SoundManager _sound = new SoundManager();
+
+    public static SoundManager Sound { get { return Instance._sound; } }
+
     void Start()
     {
         Init();
