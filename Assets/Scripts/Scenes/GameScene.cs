@@ -4,6 +4,32 @@ using UnityEngine;
 
 public class GameScene : BaseScene
 {
+    Coroutine co;
+
+    IEnumerator CoExplodeAfterSeconds(float seconds)
+    {
+        Debug.Log("Explode Enter");
+
+        yield return new WaitForSeconds(seconds);
+
+        Debug.Log("Explode Execute");
+        co = null;
+    }
+
+    IEnumerator CoStopExplodeAfterSecnods(float seconds)
+    {
+        Debug.Log("Stop Enter");
+
+        yield return new WaitForSeconds(seconds);
+
+        Debug.Log("Stop Execute");
+        if (co != null)
+        {
+            StopCoroutine(co);
+            co = null;
+        }
+    }
+
     protected override void Init()
     {
         base.Init();
@@ -12,10 +38,15 @@ public class GameScene : BaseScene
 
         Managers.UI.ShowSceneUI<UI_Inven>();
 
-        for (int i = 0; i < 5; i++)
-        {
-            Managers.Resource.Instantiate("UnityChan");
-        }
+        // PoolManager 실습
+        //for (int i = 0; i < 5; i++)
+        //{
+        //    Managers.Resource.Instantiate("UnityChan");
+        //}
+
+        // Coroutine 실습
+        co = StartCoroutine("CoExplodeAfterSeconds", 4.0f);
+        StartCoroutine("CoStopExplodeAfterSecnods", 2.0f);
     }
 
     void Update()
