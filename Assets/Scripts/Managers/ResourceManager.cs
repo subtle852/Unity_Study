@@ -11,11 +11,13 @@ public class ResourceManager
 
     public GameObject Instantiate(string path, Transform parent = null)
     {
-        GameObject prefab = Resources.Load<GameObject>($"Prefabs/{path}");
-        if (prefab == null)
+        // 1. original 이미 들고 있으면, 바로 사용
+        GameObject original = Resources.Load<GameObject>($"Prefabs/{path}");
+        if (original == null)
             Debug.Log($"Failed to load prefab : {path}");
 
-        GameObject go = Object.Instantiate(prefab, parent);
+        // 2. 풀링된 것이 있으면, 그걸 사용
+        GameObject go = Object.Instantiate(original, parent);
         int index = go.name.IndexOf("(Clone)");
         if (index > 0)
             go.name = go.name.Substring(0, index);
@@ -27,6 +29,8 @@ public class ResourceManager
     {
         if (go == null)
             return;
+
+        // 풀링이 필요하다면, Destroy하지 않고 풀링 매니저에게 보내기
 
         Object.Destroy(go, time);
     }
