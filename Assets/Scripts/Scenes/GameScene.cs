@@ -47,6 +47,10 @@ public class GameScene : BaseScene
         // Coroutine 실습
         co = StartCoroutine("CoExplodeAfterSeconds", 4.0f);
         StartCoroutine("CoStopExplodeAfterSecnods", 2.0f);
+
+        // DataManager 실습
+        Dictionary<int, Stat> dict = Managers.Data.StatDict;
+
     }
 
     void Update()
