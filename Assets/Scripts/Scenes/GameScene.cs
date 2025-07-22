@@ -49,7 +49,7 @@ public class GameScene : BaseScene
         StartCoroutine("CoStopExplodeAfterSecnods", 2.0f);
 
         // DataManager 실습
-        Dictionary<int, Stat> dict = Managers.Data.StatDict;
+        Dictionary<int, Data.Stat> dict = Managers.Data.StatDict;
 
     }
 

@@ -5,8 +5,8 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
-    float _positionSpeed = 10.0f;
+    PlayerStat _stat;
+
     [SerializeField]
     float _rotationSpeed = 10.0f;
 
@@ -18,12 +18,17 @@ public class PlayerController : MonoBehaviour
         Die,
         Moving,
         Idle,
+        Skill,
     }
 
     PlayerState _state = PlayerState.Idle;
 
+    int _mouseClickMask_GroundOrMonster = (1 << (int)Define.Layer.Ground) | (1 << (int)Define.Layer.Monster);
+
     void Start()
     {
+        _stat = gameObject.GetOrAddComponent<PlayerStat>();
+
         // 마우스 이동만 가능하도록 수정
         //Managers.Input.KeyAction -= OnKeyboard;
         //Managers.Input.KeyAction += OnKeyboard;
@@ -55,7 +60,7 @@ public class PlayerController : MonoBehaviour
         {
             NavMeshAgent nma = gameObject.GetOrAddComponent<NavMeshAgent>();
             
-            float moveDist = Mathf.Clamp(_positionSpeed * Time.deltaTime, 0, dir.magnitude);
+            float moveDist = Mathf.Clamp(_stat.MoveSpeed * Time.deltaTime, 0, dir.magnitude);
             //transform.position += dir.normalized * moveDist;
             nma.Move(dir.normalized * moveDist);
 
@@ -71,7 +76,7 @@ public class PlayerController : MonoBehaviour
 
         // 애니메이션
         Animator animator = GetComponent<Animator>();
-        animator.SetFloat("speed", _positionSpeed);
+        animator.SetFloat("speed", _stat.MoveSpeed);
     }
 
     void UpdateIdle()
@@ -122,7 +127,7 @@ public class PlayerController : MonoBehaviour
                 Quaternion.LookRotation(Vector3.forward),
                 Mathf.Clamp01(_rotationSpeed * Time.deltaTime));
 
-            transform.position += Vector3.forward * Time.deltaTime * _positionSpeed;
+            transform.position += Vector3.forward * Time.deltaTime * _stat.MoveSpeed;
         }
         if (Input.GetKey(KeyCode.S))
         {
@@ -131,7 +136,7 @@ public class PlayerController : MonoBehaviour
                 Quaternion.LookRotation(Vector3.back),
                 Mathf.Clamp01(_rotationSpeed * Time.deltaTime));
 
-            transform.position += Vector3.back * Time.deltaTime * _positionSpeed;
+            transform.position += Vector3.back * Time.deltaTime * _stat.MoveSpeed;
         }
         if (Input.GetKey(KeyCode.A))
         {
@@ -140,7 +145,7 @@ public class PlayerController : MonoBehaviour
                 Quaternion.LookRotation(Vector3.left),
                 Mathf.Clamp01(_rotationSpeed * Time.deltaTime));
 
-            transform.position += Vector3.left * Time.deltaTime * _positionSpeed;
+            transform.position += Vector3.left * Time.deltaTime * _stat.MoveSpeed;
         }
         if (Input.GetKey(KeyCode.D))
         {
@@ -149,7 +154,7 @@ public class PlayerController : MonoBehaviour
                 Quaternion.LookRotation(Vector3.right),
                 Mathf.Clamp01(_rotationSpeed * Time.deltaTime));
 
-            transform.position += Vector3.right * Time.deltaTime * _positionSpeed;
+            transform.position += Vector3.right * Time.deltaTime * _stat.MoveSpeed;
         }
     }
 
@@ -168,10 +173,19 @@ public class PlayerController : MonoBehaviour
         Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
 
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("Wall")))
+        if (Physics.Raycast(ray, out hit, 100.0f, _mouseClickMask_GroundOrMonster))
         {
             _mouseMoveDestPos = hit.point;
             _state = PlayerState.Moving;
+
+            if (hit.collider.gameObject.layer == (int)Define.Layer.Monster)
+            {
+                Debug.Log("Monster Click");
+            }
+            else if(hit.collider.gameObject.layer == (int)Define.Layer.Ground)
+            {
+                Debug.Log("Ground Click");
+            }
         }
     }
 }
