@@ -9,10 +9,6 @@ public class PlayerController : MonoBehaviour
 
     Vector3 _mouseMoveDestPos;
 
-    int _mouseClickMask_GroundOrMonster = (1 << (int)Define.Layer.Ground) | (1 << (int)Define.Layer.Monster);
-
-    GameObject _lockTarget;
-
     public enum PlayerState
     {
         Die,
@@ -21,8 +17,44 @@ public class PlayerController : MonoBehaviour
         Skill,
     }
 
+    [SerializeField]
     PlayerState _state = PlayerState.Idle;
 
+    public PlayerState State
+    {
+        get { return _state; }
+        set
+        {
+            _state = value;
+
+            Animator anim = GetComponent<Animator>();
+            switch (_state)
+            {
+                case PlayerState.Die:
+                    anim.SetBool("attack", false);
+                    break;
+
+                case PlayerState.Moving:
+                    anim.SetFloat("speed", _stat.MoveSpeed);
+                    anim.SetBool("attack", false);
+                    break;
+
+                case PlayerState.Idle:
+                    anim.SetFloat("speed", 0);
+                    anim.SetBool("attack", false);
+                    break;
+
+                case PlayerState.Skill:
+                    anim.SetBool("attack", true);
+                    break;
+
+            }
+        }
+    }
+
+    int _mouseClickMask_GroundOrMonster = (1 << (int)Define.Layer.Ground) | (1 << (int)Define.Layer.Monster);
+
+    GameObject _lockTarget;
 
     void Start()
     {
@@ -49,11 +81,22 @@ public class PlayerController : MonoBehaviour
 
     void UpdateMoving()
     {
+        if (_lockTarget != null)
+        {
+            _mouseMoveDestPos = _lockTarget.transform.position; 
+            float distance = (_mouseMoveDestPos - transform.position).magnitude;
+            if (distance <= 1.0f)
+            {
+                State = PlayerState.Skill;
+                return;
+            }
+        }
+
         Vector3 dir = _mouseMoveDestPos - transform.position;
         dir.y = 0.0f;
         if (dir.magnitude < 0.01f)
         {
-            _state = PlayerState.Idle;
+            State = PlayerState.Idle;
         }
         else
         {
@@ -69,28 +112,32 @@ public class PlayerController : MonoBehaviour
                 if (Input.GetMouseButton(0))
                     return;
 
-                _state = PlayerState.Idle;
+                State = PlayerState.Idle;
                 return;
             }
 
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 10 * Time.deltaTime);
         }
-
-        // 애니메이션
-        Animator animator = GetComponent<Animator>();
-        animator.SetFloat("speed", _stat.MoveSpeed);
     }
 
     void UpdateIdle()
     {
-        // 애니메이션
-        Animator animator = GetComponent<Animator>();
-        animator.SetFloat("speed", 0);
+
+    }
+
+    void UpdateSkill()
+    {
+
+    }
+
+    void OnHitEvent()
+    {
+        State = PlayerState.Idle;
     }
 
     void Update()
     {
-        switch (_state)
+        switch (State)
         {
             case PlayerState.Die:
                 UpdateDie(); break;
@@ -100,6 +147,9 @@ public class PlayerController : MonoBehaviour
 
             case PlayerState.Idle:
                 UpdateIdle(); break;
+
+            case PlayerState.Skill:
+                UpdateSkill(); break;
 
         }
     }
@@ -162,7 +212,7 @@ public class PlayerController : MonoBehaviour
 
     void OnMouseEvent(Define.MouseEvent evt)
     {   
-        if (_state == PlayerState.Die)
+        if (State == PlayerState.Die)
             return;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -178,7 +228,7 @@ public class PlayerController : MonoBehaviour
                         return;
 
                     _mouseMoveDestPos = hit.point;
-                    _state = PlayerState.Moving;
+                    State = PlayerState.Moving;
 
                     if (hit.collider.gameObject.layer == (int)Define.Layer.Monster)
                     {
@@ -206,7 +256,7 @@ public class PlayerController : MonoBehaviour
                 break;
             case Define.MouseEvent.PointerUp:
                 {
-                    _lockTarget = null;
+                    
                 }
                 break;
 
