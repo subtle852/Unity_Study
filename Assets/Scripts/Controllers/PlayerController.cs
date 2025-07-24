@@ -13,6 +13,21 @@ public class PlayerController : MonoBehaviour
     //bool _mouseMoveToDest = false; // state로 관리하기에 더이상 불필요
     Vector3 _mouseMoveDestPos;
 
+    Texture2D _attackIcon;
+    Texture2D _handIcon;
+    Vector2 _attackIconPos;
+    Vector2 _handIconPos;
+
+    enum CursorType
+    {
+        None,
+        Attack,
+        Hand,
+    }
+
+    CursorType _cursorType = CursorType.None;
+
+
     public enum PlayerState
     {
         Die,
@@ -27,6 +42,12 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        _attackIcon = Managers.Resource.Load<Texture2D>("Textures/Cursor/Attack");
+        _handIcon = Managers.Resource.Load<Texture2D>("Textures/Cursor/Hand");
+        _attackIconPos = new Vector2(_attackIcon.width / 5, 0);
+        _handIconPos = new Vector2(_handIcon.width / 3, 0);
+
+
         _stat = gameObject.GetOrAddComponent<PlayerStat>();
 
         // 마우스 이동만 가능하도록 수정
@@ -88,7 +109,9 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        switch(_state)
+        UpdateMouseCursor();
+
+        switch (_state)
         {
             case PlayerState.Die:
                 UpdateDie(); break;
@@ -99,6 +122,35 @@ public class PlayerController : MonoBehaviour
             case PlayerState.Idle:
                 UpdateIdle(); break;
 
+        }
+    }
+
+    void UpdateMouseCursor()
+    {
+        // 특정 조건을 정해줘서 제한해도 됨 ex. 마우스를 움직일 때만
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
+
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 100.0f, _mouseClickMask_GroundOrMonster))
+        {
+            if (hit.collider.gameObject.layer == (int)Define.Layer.Monster)
+            {
+                if (_cursorType == CursorType.Attack)
+                    return;
+
+                Cursor.SetCursor(_attackIcon, _attackIconPos, CursorMode.Auto);
+                _cursorType = CursorType.Attack;
+            }
+            else if (hit.collider.gameObject.layer == (int)Define.Layer.Ground)
+            {
+                if (_cursorType == CursorType.Hand)
+                    return;
+
+                Cursor.SetCursor(_handIcon, _handIconPos, CursorMode.Auto);
+                _cursorType = CursorType.Hand;
+            }
         }
     }
 
@@ -167,7 +219,7 @@ public class PlayerController : MonoBehaviour
         if (_state == PlayerState.Die)
             return;
 
-        Debug.Log("OnMouseClicked");
+        //Debug.Log("OnMouseClicked");
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
