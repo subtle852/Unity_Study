@@ -7,28 +7,11 @@ public class PlayerController : MonoBehaviour
 {
     PlayerStat _stat;
 
-    [SerializeField]
-    float _rotationSpeed = 10.0f;
-
-    //bool _mouseMoveToDest = false; // state로 관리하기에 더이상 불필요
     Vector3 _mouseMoveDestPos;
 
-    Texture2D _attackIcon;
-    Texture2D _handIcon;
-    Vector2 _attackIconPos;
-    Vector2 _handIconPos;
-
-    enum CursorType
-    {
-        None,
-        Attack,
-        Hand,
-    }
-
-    CursorType _cursorType = CursorType.None;
+    int _mouseClickMask_GroundOrMonster = (1 << (int)Define.Layer.Ground) | (1 << (int)Define.Layer.Monster);
 
     GameObject _lockTarget;
-
 
     public enum PlayerState
     {
@@ -40,16 +23,9 @@ public class PlayerController : MonoBehaviour
 
     PlayerState _state = PlayerState.Idle;
 
-    int _mouseClickMask_GroundOrMonster = (1 << (int)Define.Layer.Ground) | (1 << (int)Define.Layer.Monster);
 
     void Start()
     {
-        _attackIcon = Managers.Resource.Load<Texture2D>("Textures/Cursor/Attack");
-        _handIcon = Managers.Resource.Load<Texture2D>("Textures/Cursor/Hand");
-        _attackIconPos = new Vector2(_attackIcon.width / 5, 0);
-        _handIconPos = new Vector2(_handIcon.width / 3, 0);
-
-
         _stat = gameObject.GetOrAddComponent<PlayerStat>();
 
         // 마우스 이동만 가능하도록 수정
@@ -114,8 +90,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        UpdateMouseCursor();
-
         switch (_state)
         {
             case PlayerState.Die:
@@ -127,38 +101,6 @@ public class PlayerController : MonoBehaviour
             case PlayerState.Idle:
                 UpdateIdle(); break;
 
-        }
-    }
-
-    void UpdateMouseCursor()
-    {
-        // 특정 조건을 정해줘서 제한해도 됨 ex. 마우스를 움직일 때만
-
-        if (Input.GetMouseButton(0))
-            return;
-
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
-
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 100.0f, _mouseClickMask_GroundOrMonster))
-        {
-            if (hit.collider.gameObject.layer == (int)Define.Layer.Monster)
-            {
-                if (_cursorType == CursorType.Attack)
-                    return;
-
-                Cursor.SetCursor(_attackIcon, _attackIconPos, CursorMode.Auto);
-                _cursorType = CursorType.Attack;
-            }
-            else if (hit.collider.gameObject.layer == (int)Define.Layer.Ground)
-            {
-                if (_cursorType == CursorType.Hand)
-                    return;
-
-                Cursor.SetCursor(_handIcon, _handIconPos, CursorMode.Auto);
-                _cursorType = CursorType.Hand;
-            }
         }
     }
 
@@ -185,7 +127,7 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(
                 transform.rotation,
                 Quaternion.LookRotation(Vector3.forward),
-                Mathf.Clamp01(_rotationSpeed * Time.deltaTime));
+                Mathf.Clamp01(_stat.RotateSpeed * Time.deltaTime));
 
             transform.position += Vector3.forward * Time.deltaTime * _stat.MoveSpeed;
         }
@@ -194,7 +136,7 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(
                 transform.rotation,
                 Quaternion.LookRotation(Vector3.back),
-                Mathf.Clamp01(_rotationSpeed * Time.deltaTime));
+                Mathf.Clamp01(_stat.RotateSpeed * Time.deltaTime));
 
             transform.position += Vector3.back * Time.deltaTime * _stat.MoveSpeed;
         }
@@ -203,7 +145,7 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(
                 transform.rotation,
                 Quaternion.LookRotation(Vector3.left),
-                Mathf.Clamp01(_rotationSpeed * Time.deltaTime));
+                Mathf.Clamp01(_stat.RotateSpeed * Time.deltaTime));
 
             transform.position += Vector3.left * Time.deltaTime * _stat.MoveSpeed;
         }
@@ -212,7 +154,7 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(
                 transform.rotation,
                 Quaternion.LookRotation(Vector3.right),
-                Mathf.Clamp01(_rotationSpeed * Time.deltaTime));
+                Mathf.Clamp01(_stat.RotateSpeed * Time.deltaTime));
 
             transform.position += Vector3.right * Time.deltaTime * _stat.MoveSpeed;
         }

@@ -51,6 +51,7 @@ public class GameScene : BaseScene
         // DataManager 실습
         Dictionary<int, Data.Stat> dict = Managers.Data.StatDict;
 
+        gameObject.GetOrAddComponent<CursorController>();
     }
 
     void Update()
