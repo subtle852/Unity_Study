@@ -27,6 +27,8 @@ public class PlayerController : MonoBehaviour
 
     CursorType _cursorType = CursorType.None;
 
+    GameObject _lockTarget;
+
 
     public enum PlayerState
     {
@@ -51,10 +53,10 @@ public class PlayerController : MonoBehaviour
         _stat = gameObject.GetOrAddComponent<PlayerStat>();
 
         // 마우스 이동만 가능하도록 수정
-        //Managers.Input.KeyAction -= OnKeyboard;
-        //Managers.Input.KeyAction += OnKeyboard;
-        Managers.Input.MouseAction -= OnMouseClicked;
-        Managers.Input.MouseAction += OnMouseClicked;
+        //Managers.Input.KeyAction -= OnKeyboardEvent;
+        //Managers.Input.KeyAction += OnKeyboardEvent;
+        Managers.Input.MouseAction -= OnMouseEvent;
+        Managers.Input.MouseAction += OnMouseEvent;
 
         // TEMP
         //UI_Button ui = Managers.UI.ShowPopupUI<UI_Button>();
@@ -88,6 +90,9 @@ public class PlayerController : MonoBehaviour
             Debug.DrawRay(transform.position + Vector3.up * 0.5f, dir.normalized, Color.green);
             if(Physics.Raycast(transform.position + Vector3.up * 0.5f, dir, 1.0f, LayerMask.GetMask("Block")))
             {
+                if (Input.GetMouseButton(0))
+                    return;
+
                 _state = PlayerState.Idle;
                 return;
             }
@@ -129,6 +134,9 @@ public class PlayerController : MonoBehaviour
     {
         // 특정 조건을 정해줘서 제한해도 됨 ex. 마우스를 움직일 때만
 
+        if (Input.GetMouseButton(0))
+            return;
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
 
@@ -154,7 +162,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void OnKeyboard()
+    void OnKeyboardEvent()
     {
         // 이동 (다른 버전)
         //float horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -210,34 +218,56 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void OnMouseClicked(Define.MouseEvent evt)
-    {
-        // 마우스 누른 상태에서도 움직이도록 수정
-        //if (evt != Define.MouseEvent.Click)
-        //    return;
-
+    void OnMouseEvent(Define.MouseEvent evt)
+    {   
         if (_state == PlayerState.Die)
             return;
 
-        //Debug.Log("OnMouseClicked");
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
-
+        //Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 100.0f, _mouseClickMask_GroundOrMonster))
-        {
-            _mouseMoveDestPos = hit.point;
-            _state = PlayerState.Moving;
+        bool raycastHit = Physics.Raycast(ray, out hit, 100.0f, _mouseClickMask_GroundOrMonster);
 
-            if (hit.collider.gameObject.layer == (int)Define.Layer.Monster)
-            {
-                Debug.Log("Monster Click");
-            }
-            else if(hit.collider.gameObject.layer == (int)Define.Layer.Ground)
-            {
-                Debug.Log("Ground Click");
-            }
+        switch (evt)
+        {
+            case Define.MouseEvent.PointerDown:
+                {
+                    if (raycastHit == false)
+                        return;
+
+                    _mouseMoveDestPos = hit.point;
+                    _state = PlayerState.Moving;
+
+                    if (hit.collider.gameObject.layer == (int)Define.Layer.Monster)
+                    {
+                        _lockTarget = hit.collider.gameObject;
+                    }
+                    else if (hit.collider.gameObject.layer == (int)Define.Layer.Ground)
+                    {
+                        _lockTarget = null;
+                    }
+
+                }
+                break;
+            case Define.MouseEvent.Press:
+                {
+                    if (_lockTarget != null)
+                    {
+                        _mouseMoveDestPos = _lockTarget.transform.position;
+                    }
+                    else
+                    {
+                        if (raycastHit == true)
+                            _mouseMoveDestPos = hit.point;
+                    }
+                }
+                break;
+            case Define.MouseEvent.PointerUp:
+                {
+                    _lockTarget = null;
+                }
+                break;
+
         }
     }
 }
