@@ -339,6 +339,7 @@ MonoBehaviour:
   _attack: 0
   _defense: 0
   _moveSpeed: 0
+  _rotateSpeed: 0
 --- !u!1 &7908717886868789901
 GameObject:
   m_ObjectHideFlags: 0

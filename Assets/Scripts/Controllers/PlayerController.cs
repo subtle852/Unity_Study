@@ -31,21 +31,24 @@ public class PlayerController : MonoBehaviour
             switch (_state)
             {
                 case PlayerState.Die:
-                    anim.SetBool("attack", false);
+                    //anim.SetBool("attack", false);
                     break;
 
                 case PlayerState.Moving:
-                    anim.SetFloat("speed", _stat.MoveSpeed);
-                    anim.SetBool("attack", false);
+                    anim.CrossFade("RUN", 0.1f);
+                    //anim.SetFloat("speed", _stat.MoveSpeed);
+                    //anim.SetBool("attack", false);
                     break;
 
                 case PlayerState.Idle:
-                    anim.SetFloat("speed", 0);
-                    anim.SetBool("attack", false);
+                    anim.CrossFade("WAIT", 0.1f);
+                    //anim.SetFloat("speed", 0);
+                    //anim.SetBool("attack", false);
                     break;
 
                 case PlayerState.Skill:
-                    anim.SetBool("attack", true);
+                    anim.CrossFade("ATTACK", 0.1f, -1, 0); // 반복 재생
+                    //anim.SetBool("attack", true);
                     break;
 
             }
@@ -127,12 +130,24 @@ public class PlayerController : MonoBehaviour
 
     void UpdateSkill()
     {
-
+        if (_lockTarget != null)
+        {
+            Vector3 dir = _lockTarget.transform.position - transform.position;
+            Quaternion quat = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Lerp(transform.rotation, quat, 20 * Time.deltaTime);
+        }
     }
 
     void OnHitEvent()
     {
-        State = PlayerState.Idle;
+        if (_stopSkill)
+        {
+            State = PlayerState.Idle;
+        }
+        else
+        {
+            State = PlayerState.Skill;
+        }
     }
 
     void Update()
@@ -210,11 +225,36 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+    bool _stopSkill = false;
     void OnMouseEvent(Define.MouseEvent evt)
     {   
-        if (State == PlayerState.Die)
-            return;
+        switch (State)
+        {
+            case PlayerState.Die:
+                
+                break;
 
+            case PlayerState.Moving:
+                OnMouseEvent_IdleOrMoving(evt);
+                break;
+
+            case PlayerState.Idle:
+                OnMouseEvent_IdleOrMoving(evt);
+                break;
+
+            case PlayerState.Skill:
+                {
+                    if (evt == Define.MouseEvent.PointerUp)
+                        _stopSkill = true;
+                }
+                break;
+
+        }
+    }
+
+    void OnMouseEvent_IdleOrMoving(Define.MouseEvent evt)
+    {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         //Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
         RaycastHit hit;
@@ -229,6 +269,7 @@ public class PlayerController : MonoBehaviour
 
                     _mouseMoveDestPos = hit.point;
                     State = PlayerState.Moving;
+                    _stopSkill = false;
 
                     if (hit.collider.gameObject.layer == (int)Define.Layer.Monster)
                     {
@@ -243,20 +284,13 @@ public class PlayerController : MonoBehaviour
                 break;
             case Define.MouseEvent.Press:
                 {
-                    if (_lockTarget != null)
-                    {
-                        _mouseMoveDestPos = _lockTarget.transform.position;
-                    }
-                    else
-                    {
-                        if (raycastHit == true)
+                    if (raycastHit == true && _lockTarget == null)
                             _mouseMoveDestPos = hit.point;
-                    }
                 }
                 break;
             case Define.MouseEvent.PointerUp:
                 {
-                    
+                    _stopSkill = true;
                 }
                 break;
 
