@@ -17,7 +17,7 @@ public class SoundTest : MonoBehaviour
     public AudioClip audioClip;
     public AudioClip audioClip2;
 
-    int i = 0;
+    //int i = 0;
     private void OnTriggerEnter(Collider other)
     {
         // 기본 실습
