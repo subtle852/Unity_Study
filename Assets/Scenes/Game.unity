@@ -7275,6 +7275,8 @@ MonoBehaviour:
   _moveDestPos: {x: 0, y: 0, z: 0}
   _lockTarget: {fileID: 0}
   _state: 2
+  _scanRange: 10
+  _attackRange: 2
 --- !u!1001 &1159041409
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10105,6 +10107,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: UnityChan
       objectReference: {fileID: 0}
+    - target: {fileID: 4987598282180893213, guid: ac0aab6b738f19049844658069fae2c0,
+        type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 5396572704424580519, guid: ac0aab6b738f19049844658069fae2c0,
         type: 3}
       propertyPath: m_RootOrder
@@ -10175,7 +10182,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1556962262}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
@@ -13728,6 +13735,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Knight
+      objectReference: {fileID: 0}
+    - target: {fileID: 7908717886836890583, guid: d48ca280a7c3d6b4dba27e16dfacc48b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d48ca280a7c3d6b4dba27e16dfacc48b, type: 3}
