@@ -52,6 +52,11 @@ public class GameScene : BaseScene
         Dictionary<int, Data.Stat> dict = Managers.Data.StatDict;
 
         gameObject.GetOrAddComponent<CursorController>();
+
+        // 
+        GameObject player = Managers.Game.Spawn(Define.WorldObject.Player, "UnityChan");
+        Managers.Game.Spawn(Define.WorldObject.Monster, "Knight");
+        Camera.main.gameObject.GetOrAddComponent<CameraController>().SetPlayer(player);
     }
 
     void Update()

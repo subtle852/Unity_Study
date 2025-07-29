@@ -13,6 +13,8 @@ public class PlayerController : BaseController
 
     public override void Init()
     {
+        WorldObjectType = Define.WorldObject.Player;
+
         _stat = gameObject.GetOrAddComponent<PlayerStat>();
 
         //Managers.Input.KeyAction -= OnKeyboardEvent;

@@ -25,6 +25,12 @@ public class CameraController : MonoBehaviour
     {
         if(_mode == Define.CameraMode.QuarterView)
         {
+            if (_player.IsValid() == false)
+            {
+                Debug.Log("_player is NOT VALID");
+                return;
+            }
+
             RaycastHit hit;
             if(Physics.Raycast(_player.transform.position, _delta, out hit, _delta.magnitude, 1 << (int)Define.Layer.Block))
             {
@@ -44,4 +50,10 @@ public class CameraController : MonoBehaviour
         _mode = mode;
         _delta = delta;
     }
+
+    public void SetPlayer(GameObject player) 
+    { 
+        _player = player; 
+    }
+
 }
