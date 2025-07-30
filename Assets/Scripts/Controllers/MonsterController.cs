@@ -27,7 +27,8 @@ public class MonsterController : BaseController
     {
         //Debug.Log("Monster UpdateIdle");
 
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        //GameObject player = GameObject.FindGameObjectWithTag("Player");
+        GameObject player = Managers.Game.Player;
         if (player == null)
             return;
 
@@ -94,8 +95,7 @@ public class MonsterController : BaseController
         if (_lockTarget != null)
         {
             Stat targetStat = _lockTarget.GetComponent<Stat>();
-            int damage = Mathf.Max(0, _stat.Attack - targetStat.Defense);
-            targetStat.HP -= damage;
+            targetStat.OnAttacked(_stat);
 
             if (targetStat.HP > 0)
             {
@@ -112,9 +112,6 @@ public class MonsterController : BaseController
             else
             {
                 State = Define.State.Idle;
-
-                //GameObject.Destroy(targetStat.gameObject);
-                Managers.Game.Despawn(targetStat.gameObject);
             }
         }
         else

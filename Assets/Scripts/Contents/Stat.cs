@@ -39,4 +39,27 @@ public class Stat : MonoBehaviour
         _rotateSpeed = 10.0f;
     }
 
+    public virtual void OnAttacked(Stat attackerStat)
+    {
+        int damage = Mathf.Max(0, attackerStat.Attack - Defense);
+        HP -= damage;
+        if (HP < 0)
+        { 
+            HP = 0;
+            OnDead(attackerStat);
+        }
+
+    }
+
+    protected virtual void OnDead(Stat attackerStat)
+    {
+        PlayerStat playerStat = attackerStat as PlayerStat;
+        if (playerStat != null)
+        {
+            playerStat.Exp += 15;
+        }
+
+        Managers.Game.Despawn(gameObject);
+    }
+
 }
